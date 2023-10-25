@@ -1,0 +1,31 @@
+# permissions for end users to edit acrrepositories.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: acrrepository-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: acrrepository
+    app.kubernetes.io/part-of: acrrepository
+    app.kubernetes.io/managed-by: kustomize
+  name: acrrepository-editor-role
+rules:
+- apiGroups:
+  - azure.nttdata.com
+  resources:
+  - acrrepositories
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - azure.nttdata.com
+  resources:
+  - acrrepositories/status
+  verbs:
+  - get

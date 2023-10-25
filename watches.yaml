@@ -1,0 +1,12 @@
+---
+# Use the 'create api' subcommand to add watches to this file.
+- version: v1
+  group: azure.nttdata.com
+  kind: ACRRepository
+  playbook: playbooks/empty.yml
+  finalizer:
+    name: azure.nttdata.com
+    playbook: playbooks/acrrepository-delete.yml
+
+
+#+kubebuilder:scaffold:watch

@@ -1,0 +1,127 @@
+- name: Debug environment variables
+  debug:
+    msg: "AZURE_SUBSCRIPTION_ID={{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
+
+
+- name: Delete a resource group
+  azure_rm_resourcegroup:
+    name: "{{ resource_group }}"
+    state: absent
+    force_delete_nonempty: yes
+  ignore_errors: true
+
+
+# - name: Delete a resource group
+#   azure.azcollection.azure_rm_resourcegroup:
+#     client_id: your-client-id
+#     secret: your-secret
+#     tenant: your-tenant-id
+#     subscription_id: your-subscription-id
+#     name: "{{ resource_group }}"
+#     state: absent
+#     force_delete_nonempty: yes
+#   ignore_errors: true
+
+
+- name: remove secrets tekton-pipelines
+  shell: "kubectl delete secret {{ application_name }} -n tekton-pipelines"
+  ignore_errors: true
+  
+- name: remove secrets gitops
+  shell: "kubectl delete secret {{ application_name }} -n gitops"
+  ignore_errors: true
+  
+- name: remove secrets dev
+  shell: "kubectl delete secret {{ application_name }} -n dev"
+  ignore_errors: true
+  
+- name: remove secrets pre
+  shell: "kubectl delete secret {{ application_name }} -n pre"
+  ignore_errors: true
+  
+- name: remove secrets pro
+  shell: "kubectl delete secret {{ application_name }} -n pro"
+  ignore_errors: true
+
+
+
+
+# - name: Create registry credential
+#   shell: "kubectl create secret docker-registry {{ application_name }} --docker-server {{ application_name }}.azurecr.io --docker-username a54c0f1b-ab10-498c-9465-654a7cdbb3bc --docker-password pNB8Q~C8.YrbGnfZ7Lo8zLcGEFKO2nHUe4RZbbxy -n tekton-pipelines"
+#   ignore_errors: true
+
+# - name: Create registry credential
+#   shell: "kubectl create secret docker-registry {{ application_name }} --docker-server {{ application_name }}.azurecr.io --docker-username a54c0f1b-ab10-498c-9465-654a7cdbb3bc --docker-password pNB8Q~C8.YrbGnfZ7Lo8zLcGEFKO2nHUe4RZbbxy -n gitops"
+#   ignore_errors: true
+
+# - name: Create registry credential
+#   shell: "kubectl create secret docker-registry {{ application_name }} --docker-server {{ application_name }}.azurecr.io --docker-username a54c0f1b-ab10-498c-9465-654a7cdbb3bc --docker-password pNB8Q~C8.YrbGnfZ7Lo8zLcGEFKO2nHUe4RZbbxy -n dev"
+#   ignore_errors: true
+
+# - name: Create registry credential
+#   shell: "kubectl create secret docker-registry {{ application_name }} --docker-server {{ application_name }}.azurecr.io --docker-username a54c0f1b-ab10-498c-9465-654a7cdbb3bc --docker-password pNB8Q~C8.YrbGnfZ7Lo8zLcGEFKO2nHUe4RZbbxy -n pre"
+#   ignore_errors: true
+
+# - name: Create registry credential
+#   shell: "kubectl create secret docker-registry {{ application_name }} --docker-server {{ application_name }}.azurecr.io --docker-username a54c0f1b-ab10-498c-9465-654a7cdbb3bc --docker-password pNB8Q~C8.YrbGnfZ7Lo8zLcGEFKO2nHUe4RZbbxy -n pro"
+#   ignore_errors: true
+
+
+
+# ---
+# # tasks file for ACRRepository
+# - name: Get facts for one resource group
+#   azure_rm_resourcegroup_info:
+#     name: "{{ resource_group }}"
+#   register: azure_resource_groups
+#   ignore_errors: true
+
+# - name: debug
+#   debug:
+#     msg: "number of resource groups {{ azure_resource_groups.resourcegroups }}"
+
+# # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_resourcegroup_module.html#ansible-collections-azure-azcollection-azure-rm-resourcegroup-module
+# # TODO: MOVE TO ANOTHER OPERATOR
+# - name: Create a resource group
+#   azure_rm_resourcegroup:
+#     name: "{{ resource_group }}"
+#     location: "{{ location }}"
+#     tags:
+#         Application: "{{ application_name }}"
+#   register: azure_rm_resourcegroup
+#   when: "{{ azure_resource_groups.resourcegroups | length }} == 0"
+#   ignore_errors: true
+
+# - name: debug
+#   debug:
+#     msg: "{{ azure_rm_resourcegroup }}"
+
+# - name: Get instance of Registry
+#   azure_rm_containerregistry_info:
+#     resource_group: "{{ resource_group }}"
+#     name: "{{ application_name }}"
+#   register: azure_container_registry
+#   ignore_errors: true
+
+# - name: debug
+#   debug:
+#     msg: "number of acr {{ azure_container_registry.registries }}"
+
+# # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_containerregistry_module.html
+# - name: Create an azure container registry
+#   azure_rm_containerregistry:
+#     name: "{{ application_name }}"
+#     location: "{{ location }}"
+#     resource_group: "{{ resource_group }}"
+#     admin_user_enabled: true
+#     sku: Standard
+#     tags:
+#         Application: "{{ application_name }}"
+#   register: azure_rm_containerregistry
+#   when: "{{ azure_container_registry.registries | length }} == 0"
+#   ignore_errors: true
+
+# - name: debug
+#   debug:
+#     msg: "{{ azure_rm_containerregistry }}"
+

@@ -1,0 +1,27 @@
+# permissions for end users to view acrrepositories.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: acrrepository-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: acrrepository
+    app.kubernetes.io/part-of: acrrepository
+    app.kubernetes.io/managed-by: kustomize
+  name: acrrepository-viewer-role
+rules:
+- apiGroups:
+  - azure.nttdata.com
+  resources:
+  - acrrepositories
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - azure.nttdata.com
+  resources:
+  - acrrepositories/status
+  verbs:
+  - get
